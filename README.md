@@ -5,9 +5,9 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/erikthiart/ai-stock-dashboard)](https://github.com/erikthiart/ai-stock-dashboard)
 
-> **Professional-grade stock analysis with machine learning predictions and real-time technical indicators**
+> **A Streamlit dashboard for stock charts, technical indicators and an experimental Random Forest price forecast.**
 
-A comprehensive, AI-powered stock market dashboard that combines advanced technical analysis, machine learning price predictions, and intelligent market insights in a beautiful, interactive interface.
+Pick a ticker and get candlestick charts, 20+ indicators, risk metrics and a plain-English summary of what the indicators say. The price forecast is a learning exercise, not a trading signal. See [Limitations](#limitations).
 
 ![Main Dashboard](screenshots/main_dashboard.jpg)
 
@@ -26,7 +26,7 @@ A comprehensive, AI-powered stock market dashboard that combines advanced techni
 - **Performance Metrics** - Sharpe ratio, volatility, maximum drawdown
 
 ### 🎯 **Real-Time Data**
-- **Live Stock Data** - Real-time prices from Yahoo Finance
+- **Market Data** - Prices from Yahoo Finance through `yfinance` (free data, can be delayed)
 - **Multiple Timeframes** - 1M to 5Y analysis periods
 - **Popular Stock Presets** - Quick access to FAANG+ stocks
 - **Custom Symbol Input** - Analyze any publicly traded stock
@@ -116,8 +116,8 @@ Our AI uses a **Random Forest Regressor** trained on 30+ features including:
 - **Statistical features**: Rolling means and standard deviations
 
 **Model Performance:**
-- Real-time training on historical data
-- Cross-validation with train/test splits
+- The model is retrained each time you load a ticker
+- Scored on a random 80/20 train/test split (see [Limitations](#limitations))
 - Feature importance analysis
 - Confidence metrics displayed
 
@@ -138,7 +138,7 @@ Our AI uses a **Random Forest Regressor** trained on 30+ features including:
 
 ### 📈 **For Traders**
 - Quick technical analysis of any stock
-- AI-powered price predictions for next trading day
+- Experimental next-day price estimate (not a trading signal)
 - Volume confirmation signals
 - Multiple timeframe analysis
 
@@ -155,6 +155,15 @@ Our AI uses a **Random Forest Regressor** trained on 30+ features including:
 - Professional chart analysis
 
 ![Company Info](screenshots/company_info.jpg)
+
+## Limitations
+
+Read this before trusting any forecast the dashboard shows.
+
+- **The train/test split is random, not chronological.** `train_test_split` shuffles rows, so the model is tested on days that sit between days it trained on. For time series this leaks information and makes the accuracy figures look better than they would be on genuinely unseen future data. A walk-forward split (`shuffle=False` or `TimeSeriesSplit`) is the fix.
+- **One model, one stock, one year of data by default.** There is no benchmark against a naive "tomorrow equals today" baseline.
+- **No transaction costs, no backtest.** The dashboard does not simulate trading.
+- **Data comes from Yahoo Finance** through an unofficial library, so it can be delayed, adjusted or briefly unavailable.
 
 ## ⚠️ Disclaimer
 
